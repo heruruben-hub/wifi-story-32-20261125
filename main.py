@@ -36,10 +36,15 @@ def main() -> None:
         )
     if not name.strip():
         raise SystemExit("entry must not be only whitespace")
+    if "\n" in name or "\r" in name:
+        raise SystemExit("entry must be a single line")
     out_dir = "/output"
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
         f.write(name + "\n")
+    written = open(os.path.join(out_dir, "entry.txt"), encoding="utf-8").read()
+    if written.rstrip("\n") != name or len(written.rstrip("\n")) != len(name):
+        raise SystemExit("entry.txt does not hold exactly the entry")
 
 
 if __name__ == "__main__":
